@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>2022</title>
+  </head>
+  <body>
+    <h1>Remain of 2022: x days</h1>
+  </body>
+  <script type="text/javascript">
+    leftDaysOfYear = (year) => {
+        today = new Date();
+        let endYear = new Date(year, 11, 31, 23, 59, 59);
+        let msPerDay = 24 * 60 * 60 * 1000;
+        return Math.round((endYear.getTime() - today.getTime()) / msPerDay);
+    };
+
+    var d = new Date();
+    var year = d.getFullYear();
+    var leftDays = leftDaysOfYear(year);
+
+    document.title = year;
+    document.getElementsByTagName("h1")[0].innerHTML = "Remain of " + year + ": " + leftDays + " days";
+
+  </script>
+</html>
