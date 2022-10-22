@@ -15,7 +15,7 @@ jobs:
       - name: Setup Nodejs
         uses: actions/setup-node@v2
         with:
-          node-version: 14
+          node-version: 18
 
       - name: Cache dependencies
         uses: actions/cache@v2
@@ -27,9 +27,6 @@ jobs:
 
       - name: Install dependencies
         run: npm ci --ignore-scripts
-
-      - name: Run UTs
-        run: npm test
 
       - name: Build production app
         run: npm run build
