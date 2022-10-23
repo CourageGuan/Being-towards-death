@@ -39,7 +39,7 @@ function App() {
     <DocumentTitle title={title}>
       <div className="App">
         <CountdownClock />
-        <div className="grid grid-cols-12 gap-4">
+        <div className="grid grid-cols-12 gap-4 m-4">
           <div className="col-start-2 col-end-9">
             <YearlyChart />
           </div>
