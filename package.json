@@ -25,6 +25,7 @@
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
+    "add-domain": "echo 'https://countdown.leapnebula.com' > build/CNAME",
     "test": "react-scripts test",
     "eject": "react-scripts eject"
   },
