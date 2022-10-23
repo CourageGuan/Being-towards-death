@@ -29,6 +29,7 @@ const today = new Date();
 const year = today.getFullYear();
 const totalDays = isLeapYear(year) ? 366 : 365;
 const leftDays = leftOfYear(year);
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 const passedDays = totalDays - leftDays;
 
 function App() {
