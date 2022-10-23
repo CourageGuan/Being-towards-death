@@ -11,10 +11,14 @@
     "@types/node": "^16.7.13",
     "@types/react": "^18.0.0",
     "@types/react-dom": "^18.0.0",
+    "autoprefixer": "^10.4.12",
+    "dateformat": "^5.0.3",
+    "postcss": "^8.4.18",
     "react": "^18.2.0",
     "react-document-title": "^2.0.3",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
+    "tailwindcss": "^3.2.1",
     "typescript": "^4.4.2",
     "web-vitals": "^2.1.0"
   },
@@ -43,6 +47,7 @@
     ]
   },
   "devDependencies": {
+    "@types/dateformat": "^5.0.0",
     "@types/react-document-title": "^2.0.5"
   }
 }
