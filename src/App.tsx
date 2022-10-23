@@ -1,7 +1,10 @@
+// TODO: add UT for last few days
 import './App.css';
 import DocumentTitle from 'react-document-title';
 import dateFormat from "dateformat";
 import { useEffect, useState } from 'react';
+import { dotMatrix } from './Const';
+import React from 'react';
 
 type CountdownMode = "Days" | "Hours" | "Minutes" | "Seconds"
 
@@ -33,17 +36,17 @@ const leftDays = leftOfYear(year);
 const passedDays = totalDays - leftDays;
 
 function App() {
-  const title = (year + 1) + " Countdown";
+  const title = year + 1 + " Countdown";
 
   return (
     <DocumentTitle title={title}>
       <div className="App">
         <CountdownClock />
         <div className="grid grid-cols-12 gap-4 m-4">
-          <div className="col-start-2 col-end-9">
+          <div className="col-start-2 col-end-8">
             <YearlyChart />
           </div>
-          <div className="col-start-9 col-end-11">
+          <div className="col-start-8 col-end-11">
             <Summary />
           </div>
         </div>
@@ -57,6 +60,7 @@ function CountdownClock(
 ) {
   const mode = props.mode || "Seconds";
   const [ left, setLeft ] = useState(leftOfYear(year, mode));
+  const canvasRef = React.createRef<HTMLCanvasElement>();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -66,12 +70,54 @@ function CountdownClock(
     return () => clearInterval(interval);
   }, [mode]);
 
+  const canvasHeight = 100, canvasWidth = 600;
+  useEffect(() => {
+    if (canvasRef.current) {
+      canvasRef.current.height = canvasHeight; // reset height to redraw
+      let context = canvasRef.current.getContext('2d')
+      if (context) {
+        renderDigit(context, left, canvasHeight);
+      }
+    }
+  }, [canvasRef, left]);
+
   return (
-    <div className="flex flex-col items-center justify-center">
-      <div className="text-6xl font-bold">{left}</div>
-      <div className="text-2xl">{mode} countdown to {year + 1}</div>
+    <div className="flex flex-col items-center justify-center m-20">
+      <canvas ref={canvasRef} height={canvasHeight} width={canvasWidth} /> 
+      <div className="text-3xl">{mode} countdown to {year + 1}</div>
     </div>
   );
+}
+
+function renderDigit(cxt: CanvasRenderingContext2D, num: number, height = 100) {
+  const digits = [];
+  if (num === 0) digits.push(0);
+  console.log(num)
+  while (num > 0) {
+    digits.push(num % 10);
+    num = Math.floor(num / 10);
+    console.log(num)
+  }
+  const R = height / 20 - 1;
+
+  digits.reverse().forEach((digit, index) => {
+    for (let i = 0; i < dotMatrix[digit].length; i++) {
+      for (let j = 0; j < dotMatrix[digit][i].length; j++) {
+        if (dotMatrix[digit][i][j] === 1) {
+          cxt.beginPath();
+          cxt.arc(
+            14 * (R + 2) * index + j * 2 * (R + 1) + (R + 1),
+            i * 2 * (R + 1) + (R + 1),
+            R,
+            0,
+            2 * Math.PI
+          );
+          cxt.closePath();
+          cxt.fill();
+        }
+      }
+    }
+  });
 }
 
 function Day(props: { isPassed: boolean, isToday?: boolean }) {
@@ -80,11 +126,12 @@ function Day(props: { isPassed: boolean, isToday?: boolean }) {
 }
 
 function YearlyChart() {
+  const today = new Date();
   const dayOfmonths = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
   if (isLeapYear(today.getFullYear())) {
     dayOfmonths[2] = 29;
   }
-  const month = today.getMonth();
+  const month = today.getMonth() + 1;
   const day = today.getDate();
 
   let isPassed = false;
@@ -111,9 +158,9 @@ function YearlyChart() {
 function Summary() {
   return (
     <div>
-      <h3>{dateFormat(today, "yyyy-mm-dd")}</h3>
       {/* TODO: refactor to progress bar */}
       <div className="flex flex-col items-center justify-center">
+        <div className="text-2xl">{dateFormat(today, "yyyy-mm-dd")}</div>
         <div className="text-6xl font-bold">{leftDays}</div>
         <div className="text-2xl">Days Left</div>
       </div>
