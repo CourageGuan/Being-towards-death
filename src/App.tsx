@@ -1,4 +1,8 @@
-// TODO: add UT for last few days
+/* TODO: 
+1. add UT for last few days
+2. support responsive design
+3. add timezone hint
+*/
 import './App.css';
 import DocumentTitle from 'react-document-title';
 import dateFormat from "dateformat";
@@ -28,15 +32,10 @@ const leftOfYear = (year: number, mode: CountdownMode = "Days") => {
   }
 }
 
-const today = new Date();
-const year = today.getFullYear();
-const totalDays = isLeapYear(year) ? 366 : 365;
-const leftDays = leftOfYear(year);
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-const passedDays = totalDays - leftDays;
-
 function App() {
-  const title = year + 1 + " Countdown";
+  const today = new Date();
+  const year = today.getFullYear();
+  const title = year + " to " + (year + 1) + " Countdown";
 
   return (
     <DocumentTitle title={title}>
@@ -58,6 +57,8 @@ function App() {
 function CountdownClock(
    props: { mode?: CountdownMode }
 ) {
+  const today = new Date();
+  const year = today.getFullYear();
   const mode = props.mode || "Seconds";
   const [ left, setLeft ] = useState(leftOfYear(year, mode));
   const canvasRef = React.createRef<HTMLCanvasElement>();
@@ -68,7 +69,7 @@ function CountdownClock(
     }, 1000);
 
     return () => clearInterval(interval);
-  }, [mode]);
+  }, [mode, year]);
 
   const canvasHeight = 100, canvasWidth = 600;
   useEffect(() => {
@@ -156,12 +157,14 @@ function YearlyChart() {
 }
 
 function Summary() {
+  const today = new Date();
+  const year = today.getFullYear();
   return (
     <div>
       {/* TODO: refactor to progress bar */}
       <div className="flex flex-col items-center justify-center">
         <div className="text-2xl">{dateFormat(today, "yyyy-mm-dd")}</div>
-        <div className="text-6xl font-bold">{leftDays}</div>
+        <div className="text-6xl font-bold">{leftOfYear(year)}</div>
         <div className="text-2xl">Days Left</div>
       </div>
     </div>
